@@ -25,12 +25,12 @@ pedido_dao = PedidoDAO()
 
 @app.route("/", methods=["GET"])
 def servir_index():
-    return render_template("index.html")
+    return render_template("livros.html")
 
 
 @app.route("/<pagina>.html", methods=["GET"])
 def servir_pagina(pagina):
-    if pagina not in ("index", "categorias", "clientes", "pedidos"):
+    if pagina not in ("livros", "categorias", "clientes", "pedidos"):
         abort(404)
     return render_template(f"{pagina}.html")
 
