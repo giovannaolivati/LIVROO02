@@ -5,24 +5,26 @@ Sistema web completo de gerenciamento de uma livraria em Greenwich Village, Nova
 ## Estrutura de Pastas do Projeto
 
 ```text
-the-greenwich-corner-books/
-├── index.html                          # Página principal autossuficiente (HTML + CSS + JS embutidos para GitHub Pages)
-├── .nojekyll                           # Desativa o processamento Jekyll no GitHub Pages
-├── .gitignore                          # Ignora caches Python e arquivos temporários
-├── README.md                           # Documentação do projeto e guia de execução
-├── css/
-│   └── style.css                       # Folha de estilos temática (New York Bookshop)
-├── js/
-│   └── script.js                       # Lógica CRUD assíncrona (Fetch API + fallback LocalStorage)
+.
+├── index.html                      # Entrada do GitHub Pages (redireciona para templates/index.html)
 ├── backend/
-│   ├── app.py                          # Servidor web e API REST em Python (Flask + CORS)
-│   ├── dao.py                          # Camada de persistência DAO (SQLite com chaves estrangeiras)
-│   ├── models.py                       # Classes de domínio POO (Categoria, Cliente, Livro, Pedido, ItemPedido)
-│   └── requirements.txt                # Dependências Python (Flask e flask-cors)
-└── database/
-    ├── banco.sql                       # Script DDL (CREATE TABLE) e DML (INSERT inicial)
-    ├── consultas_integradoras.sql      # Consultas SQL (INNER JOIN, LEFT JOIN, Subqueries, NOT EXISTS, Paginação)
-    └── brmodelo_logico.txt             # Esquema lógico relacional (PKs, FKs e cardinalidades)
+│   ├── app.py                      # Servidor Flask + API REST
+│   ├── models.py                   # Classes de domínio (POO)
+│   ├── dao.py                      # Persistência (SQLite)
+│   └── requirements.txt            # Dependências (Flask e flask-cors)
+├── templates/
+│   └── index.html                  # Página principal
+├── static/
+│   ├── css/style.css
+│   └── js/script.js
+├── schemas/
+│   ├── banco.sql                   # DDL e DML inicial
+│   └── consultas_integradoras.sql  # Consultas SQL (o livraria.db é gerado aqui)
+├── docs/                           # Pacote .zip e documentação
+├── .github/workflows/static.yml    # Deploy no GitHub Pages
+├── .nojekyll
+├── .gitignore
+└── README.md
 ```
 
 ## Como Publicar no GitHub Pages
@@ -40,8 +42,8 @@ the-greenwich-corner-books/
    cd backend
    pip install -r requirements.txt
    ```
-2. Inicie o servidor Flask (cria e popula `database/livraria.db` automaticamente):
+2. Inicie o servidor Flask (cria e popula `schemas/livraria.db` automaticamente):
    ```bash
    python app.py
    ```
-3. Acesse `http://127.0.0.1:5000` no navegador (ou abra `index.html`). O badge superior indicará **API REST Flask + SQLite Conectada**.
+3. Acesse `http://127.0.0.1:5000` no navegador . O badge superior indicará **API REST Flask + SQLite Conectada**.

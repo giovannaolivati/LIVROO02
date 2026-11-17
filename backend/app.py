@@ -1,14 +1,18 @@
 import os
 import sqlite3
 from datetime import date
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from models import Categoria, Cliente, Livro, Pedido, ItemPedido
 from dao import inicializar_banco, CategoriaDAO, ClienteDAO, LivroDAO, PedidoDAO
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    template_folder=os.path.join(ROOT_DIR, "templates"),
+    static_folder=os.path.join(ROOT_DIR, "static"),
+)
 CORS(app)
 
 inicializar_banco()
@@ -19,20 +23,9 @@ livro_dao = LivroDAO()
 pedido_dao = PedidoDAO()
 
 
-# --- Rotas para servir o front-end localmente via http://127.0.0.1:5000 ---
 @app.route("/", methods=["GET"])
 def servir_index():
-    return send_from_directory(ROOT_DIR, "index.html")
-
-
-@app.route("/css/<path:filename>", methods=["GET"])
-def servir_css(filename):
-    return send_from_directory(os.path.join(ROOT_DIR, "css"), filename)
-
-
-@app.route("/js/<path:filename>", methods=["GET"])
-def servir_js(filename):
-    return send_from_directory(os.path.join(ROOT_DIR, "js"), filename)
+    return render_template("index.html")
 
 
 # --- API REST: CATEGORIAS ---
