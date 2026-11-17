@@ -10,17 +10,10 @@ Sistema web completo de gerenciamento de uma livraria em Greenwich Village, Nova
 ├── backend/
 │   ├── app.py                      # Servidor Flask + API REST
 │   ├── models.py                   # Classes de domínio (POO)
-│   ├── dao.py                      # Persistência (SQLite)
+│   ├── dao.py                      # Persistência (SQLite; cria schemas/livraria.db ao rodar)
 │   └── requirements.txt            # Dependências (Flask e flask-cors)
 ├── templates/
-│   └── index.html                  # Página principal
-├── static/
-│   ├── css/style.css
-│   └── js/script.js
-├── schemas/
-│   ├── banco.sql                   # DDL e DML inicial
-│   └── consultas_integradoras.sql  # Consultas SQL (o livraria.db é gerado aqui)
-├── docs/                           # Pacote .zip e documentação
+│   └── index.html                  # Página principal (HTML + CSS + JS embutidos)
 ├── .github/workflows/static.yml    # Deploy no GitHub Pages
 ├── .nojekyll
 ├── .gitignore
