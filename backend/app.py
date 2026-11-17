@@ -1,10 +1,21 @@
+import os
 import sqlite3
 from datetime import date
-from flask import Blueprint, request, jsonify, render_template
-from .models import Categoria, Cliente, Livro, Pedido, ItemPedido
-from .dao import CategoriaDAO, ClienteDAO, LivroDAO, PedidoDAO
+from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
+from models import Categoria, Cliente, Livro, Pedido, ItemPedido
+from dao import inicializar_banco, CategoriaDAO, ClienteDAO, LivroDAO, PedidoDAO
 
-bp = Blueprint("main", __name__)
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+app = Flask(
+    __name__,
+    template_folder=os.path.join(ROOT_DIR, "templates"),
+    static_folder=os.path.join(ROOT_DIR, "static"),
+)
+CORS(app)
+
+inicializar_banco()
 
 categoria_dao = CategoriaDAO()
 cliente_dao = ClienteDAO()
@@ -12,19 +23,18 @@ livro_dao = LivroDAO()
 pedido_dao = PedidoDAO()
 
 
-# --- Rotas para servir o front-end localmente via http://127.0.0.1:5000 ---
-@bp.route("/", methods=["GET"])
+@app.route("/", methods=["GET"])
 def servir_index():
     return render_template("index.html")
 
 
 # --- API REST: CATEGORIAS ---
-@bp.route("/api/categorias", methods=["GET"])
+@app.route("/api/categorias", methods=["GET"])
 def listar_categorias():
     return jsonify([c.to_dict() for c in categoria_dao.buscar_todos()])
 
 
-@bp.route("/api/categorias", methods=["POST"])
+@app.route("/api/categorias", methods=["POST"])
 def criar_categoria():
     dados = request.get_json(silent=True) or {}
     nome = (dados.get("nome") or "").strip()
@@ -34,7 +44,7 @@ def criar_categoria():
     return jsonify({"id_categoria": id_gerado, "mensagem": "Categoria cadastrada!"}), 201
 
 
-@bp.route("/api/categorias/<int:id_categoria>", methods=["PUT"])
+@app.route("/api/categorias/<int:id_categoria>", methods=["PUT"])
 def atualizar_categoria(id_categoria):
     dados = request.get_json(silent=True) or {}
     nome = (dados.get("nome") or "").strip()
@@ -44,7 +54,7 @@ def atualizar_categoria(id_categoria):
     return jsonify({"mensagem": "Categoria atualizada!"})
 
 
-@bp.route("/api/categorias/<int:id_categoria>", methods=["DELETE"])
+@app.route("/api/categorias/<int:id_categoria>", methods=["DELETE"])
 def remover_categoria(id_categoria):
     try:
         categoria_dao.remover(id_categoria)
@@ -54,12 +64,12 @@ def remover_categoria(id_categoria):
 
 
 # --- API REST: CLIENTES ---
-@bp.route("/api/clientes", methods=["GET"])
+@app.route("/api/clientes", methods=["GET"])
 def listar_clientes():
     return jsonify([c.to_dict() for c in cliente_dao.buscar_todos()])
 
 
-@bp.route("/api/clientes", methods=["POST"])
+@app.route("/api/clientes", methods=["POST"])
 def criar_cliente():
     dados = request.get_json(silent=True) or {}
     nome = (dados.get("nome") or "").strip()
@@ -74,7 +84,7 @@ def criar_cliente():
         return jsonify({"erro": "Este e-mail já está cadastrado para outro cliente."}), 400
 
 
-@bp.route("/api/clientes/<int:id_cliente>", methods=["PUT"])
+@app.route("/api/clientes/<int:id_cliente>", methods=["PUT"])
 def atualizar_cliente(id_cliente):
     dados = request.get_json(silent=True) or {}
     nome = (dados.get("nome") or "").strip()
@@ -89,7 +99,7 @@ def atualizar_cliente(id_cliente):
         return jsonify({"erro": "Este e-mail já pertence a outro cliente."}), 400
 
 
-@bp.route("/api/clientes/<int:id_cliente>", methods=["DELETE"])
+@app.route("/api/clientes/<int:id_cliente>", methods=["DELETE"])
 def remover_cliente(id_cliente):
     try:
         cliente_dao.remover(id_cliente)
@@ -99,12 +109,12 @@ def remover_cliente(id_cliente):
 
 
 # --- API REST: LIVROS ---
-@bp.route("/api/livros", methods=["GET"])
+@app.route("/api/livros", methods=["GET"])
 def listar_livros():
     return jsonify([l.to_dict() for l in livro_dao.buscar_todos()])
 
 
-@bp.route("/api/livros", methods=["POST"])
+@app.route("/api/livros", methods=["POST"])
 def criar_livro():
     dados = request.get_json(silent=True) or {}
     try:
@@ -121,7 +131,7 @@ def criar_livro():
         return jsonify({"erro": "Dados inválidos ou categoria inexistente."}), 400
 
 
-@bp.route("/api/livros/<int:id_livro>", methods=["PUT"])
+@app.route("/api/livros/<int:id_livro>", methods=["PUT"])
 def atualizar_livro(id_livro):
     dados = request.get_json(silent=True) or {}
     try:
@@ -138,7 +148,7 @@ def atualizar_livro(id_livro):
         return jsonify({"erro": "Dados inválidos ou categoria inexistente."}), 400
 
 
-@bp.route("/api/livros/<int:id_livro>", methods=["DELETE"])
+@app.route("/api/livros/<int:id_livro>", methods=["DELETE"])
 def remover_livro(id_livro):
     try:
         livro_dao.remover(id_livro)
@@ -148,12 +158,12 @@ def remover_livro(id_livro):
 
 
 # --- API REST: PEDIDOS ---
-@bp.route("/api/pedidos", methods=["GET"])
+@app.route("/api/pedidos", methods=["GET"])
 def listar_pedidos():
     return jsonify([p.to_dict() for p in pedido_dao.buscar_todos()])
 
 
-@bp.route("/api/pedidos", methods=["POST"])
+@app.route("/api/pedidos", methods=["POST"])
 def criar_pedido():
     dados = request.get_json(silent=True) or {}
     itens_raw = dados.get("itens", [])
@@ -179,7 +189,7 @@ def criar_pedido():
         return jsonify({"erro": "Não foi possível registrar o pedido. Verifique cliente e livros."}), 400
 
 
-@bp.route("/api/pedidos/<int:id_pedido>", methods=["PUT"])
+@app.route("/api/pedidos/<int:id_pedido>", methods=["PUT"])
 def atualizar_pedido(id_pedido):
     dados = request.get_json(silent=True) or {}
     status = (dados.get("status") or "").strip()
@@ -189,7 +199,11 @@ def atualizar_pedido(id_pedido):
     return jsonify({"mensagem": "Status atualizado!"})
 
 
-@bp.route("/api/pedidos/<int:id_pedido>", methods=["DELETE"])
+@app.route("/api/pedidos/<int:id_pedido>", methods=["DELETE"])
 def remover_pedido(id_pedido):
     pedido_dao.remover(id_pedido)
     return jsonify({"mensagem": "Pedido excluído!"})
+
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)

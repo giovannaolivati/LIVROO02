@@ -6,21 +6,21 @@ Sistema web completo de gerenciamento de uma livraria em Greenwich Village, Nova
 
 ```text
 .
-├── run.py                          # Ponto de entrada (python run.py)
-├── requirements.txt                # Dependências (Flask e flask-cors)
-├── app/                            # Aplicação Flask
-│   ├── __init__.py                 # create_app() e configuração
-│   ├── routes.py                   # Rotas e API REST
+├── index.html                      # Entrada do GitHub Pages (redireciona para templates/index.html)
+├── backend/
+│   ├── app.py                      # Servidor Flask + API REST
 │   ├── models.py                   # Classes de domínio (POO)
 │   ├── dao.py                      # Persistência (SQLite)
-│   ├── templates/index.html        # Página principal
-│   └── static/
-│       ├── css/style.css
-│       └── js/script.js
-├── database/
+│   └── requirements.txt            # Dependências (Flask e flask-cors)
+├── templates/
+│   └── index.html                  # Página principal
+├── static/
+│   ├── css/style.css
+│   └── js/script.js
+├── schemas/
 │   ├── banco.sql                   # DDL e DML inicial
-│   └── consultas_integradoras.sql  # Consultas SQL
-├── arquivos/                       # Pacote .zip do projeto
+│   └── consultas_integradoras.sql  # Consultas SQL (o livraria.db é gerado aqui)
+├── docs/                           # Pacote .zip e documentação
 ├── .github/workflows/static.yml    # Deploy no GitHub Pages
 ├── .nojekyll
 ├── .gitignore
@@ -39,10 +39,11 @@ Sistema web completo de gerenciamento de uma livraria em Greenwich Village, Nova
 
 1. Instale as dependências:
    ```bash
+   cd backend
    pip install -r requirements.txt
    ```
-2. Inicie o servidor Flask (cria e popula `database/livraria.db` automaticamente):
+2. Inicie o servidor Flask (cria e popula `schemas/livraria.db` automaticamente):
    ```bash
-   python run.py
+   python app.py
    ```
 3. Acesse `http://127.0.0.1:5000` no navegador . O badge superior indicará **API REST Flask + SQLite Conectada**.
