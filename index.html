@@ -672,6 +672,7 @@ let cacheLivros = [];
 let cachePedidos = [];
 let carrinhoPedido = [];
 
+// Dados iniciais sincronizados com database/banco.sql e backend/dao.py
 const SEED_DATA = {
     categorias: [
         { id_categoria: 1, nome: "Clássicos Americanos" },
@@ -716,9 +717,28 @@ const SEED_DATA = {
                 { id_livro: 4, quantidade: 1, preco_unitario: 62.00 },
                 { id_livro: 5, quantidade: 1, preco_unitario: 59.90 }
             ]
+        },
+        {
+            id_pedido: 103,
+            data_pedido: "2026-11-12",
+            status: "Pendente",
+            valor_total: 93.00,
+            id_cliente: 3,
+            itens: [
+                { id_livro: 3, quantidade: 2, preco_unitario: 46.50 }
+            ]
         }
     ]
 };
+
+function escapeHtml(texto) {
+    return String(texto ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
 
 function getLocalDB() {
     const salvo = localStorage.getItem("greenwich_bookshop_db");
@@ -735,7 +755,7 @@ function saveLocalDB(db) {
 
 function mostrarFeedback(mensagem, tipo = "success") {
     const banner = document.getElementById("feedback-banner");
-    banner.innerHTML = `<div class="feedback-msg ${tipo}">${mensagem}</div>`;
+    banner.innerHTML = `<div class="feedback-msg ${tipo}">${escapeHtml(mensagem)}</div>`;
     setTimeout(() => {
         banner.innerHTML = "";
     }, 4500);
@@ -743,15 +763,25 @@ function mostrarFeedback(mensagem, tipo = "success") {
 
 async function apiRequest(endpoint, options = {}) {
     if (!modoDemoGitHub) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1800);
         try {
-            const response = await fetch(`${API_BASE}${endpoint}`, options);
+            const response = await fetch(`${API_BASE}${endpoint}`, {
+                ...options,
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
             const data = await response.json();
             if (!response.ok) {
                 throw new Error(data.erro || "Erro na operação.");
             }
             return data;
         } catch (erro) {
-            if (erro.message && !erro.message.includes("Failed to fetch") && !erro.message.includes("NetworkError")) {
+            clearTimeout(timeoutId);
+            const isNetworkOrTimeout =
+                erro.name === "AbortError" ||
+                (erro.message && (erro.message.includes("Failed to fetch") || erro.message.includes("NetworkError")));
+            if (!isNetworkOrTimeout) {
                 throw erro;
             }
             modoDemoGitHub = true;
@@ -775,14 +805,14 @@ function executarNoLocalStorage(endpoint, options) {
         return { id_categoria: novoId, mensagem: "Categoria cadastrada!" };
     }
     if (endpoint.startsWith("/categorias/") && method === "PUT") {
-        const id = parseInt(endpoint.split("/")[2]);
+        const id = parseInt(endpoint.split("/")[2], 10);
         const item = db.categorias.find(c => c.id_categoria === id);
         if (item) item.nome = body.nome;
         saveLocalDB(db);
         return { mensagem: "Categoria atualizada!" };
     }
     if (endpoint.startsWith("/categorias/") && method === "DELETE") {
-        const id = parseInt(endpoint.split("/")[2]);
+        const id = parseInt(endpoint.split("/")[2], 10);
         if (db.livros.some(l => l.id_categoria === id)) {
             throw new Error("Não é possível excluir: existem livros vinculados a esta categoria.");
         }
@@ -802,7 +832,7 @@ function executarNoLocalStorage(endpoint, options) {
         return { id_cliente: novoId, mensagem: "Cliente cadastrado!" };
     }
     if (endpoint.startsWith("/clientes/") && method === "PUT") {
-        const id = parseInt(endpoint.split("/")[2]);
+        const id = parseInt(endpoint.split("/")[2], 10);
         if (db.clientes.some(c => c.email.toLowerCase() === body.email.toLowerCase() && c.id_cliente !== id)) {
             throw new Error("Este e-mail já pertence a outro cliente.");
         }
@@ -812,7 +842,7 @@ function executarNoLocalStorage(endpoint, options) {
         return { mensagem: "Cliente atualizado!" };
     }
     if (endpoint.startsWith("/clientes/") && method === "DELETE") {
-        const id = parseInt(endpoint.split("/")[2]);
+        const id = parseInt(endpoint.split("/")[2], 10);
         if (db.pedidos.some(p => p.id_cliente === id)) {
             throw new Error("Não é possível excluir: este cliente possui pedidos registrados.");
         }
@@ -834,14 +864,14 @@ function executarNoLocalStorage(endpoint, options) {
         return { id_livro: novoId, mensagem: "Livro adicionado!" };
     }
     if (endpoint.startsWith("/livros/") && method === "PUT") {
-        const id = parseInt(endpoint.split("/")[2]);
+        const id = parseInt(endpoint.split("/")[2], 10);
         const liv = db.livros.find(l => l.id_livro === id);
         if (liv) Object.assign(liv, body);
         saveLocalDB(db);
         return { mensagem: "Livro atualizado!" };
     }
     if (endpoint.startsWith("/livros/") && method === "DELETE") {
-        const id = parseInt(endpoint.split("/")[2]);
+        const id = parseInt(endpoint.split("/")[2], 10);
         const emPedido = db.pedidos.some(p => p.itens.some(i => i.id_livro === id));
         if (emPedido) {
             throw new Error("Não é possível excluir: este livro faz parte de um pedido registrado.");
@@ -877,14 +907,14 @@ function executarNoLocalStorage(endpoint, options) {
         return { id_pedido: novoId, mensagem: "Pedido registrado!" };
     }
     if (endpoint.startsWith("/pedidos/") && method === "PUT") {
-        const id = parseInt(endpoint.split("/")[2]);
+        const id = parseInt(endpoint.split("/")[2], 10);
         const ped = db.pedidos.find(p => p.id_pedido === id);
         if (ped) ped.status = body.status;
         saveLocalDB(db);
         return { mensagem: "Status atualizado!" };
     }
     if (endpoint.startsWith("/pedidos/") && method === "DELETE") {
-        const id = parseInt(endpoint.split("/")[2]);
+        const id = parseInt(endpoint.split("/")[2], 10);
         db.pedidos = db.pedidos.filter(p => p.id_pedido !== id);
         saveLocalDB(db);
         return { mensagem: "Pedido excluído!" };
@@ -930,7 +960,7 @@ async function carregarCategorias() {
         div.className = "item-card";
         div.innerHTML = `
             <div class="item-info">
-                <h3>${cat.nome}</h3>
+                <h3>${escapeHtml(cat.nome)}</h3>
                 <span class="item-meta">Código #${cat.id_categoria}</span>
             </div>
             <div class="item-actions">
@@ -960,8 +990,8 @@ async function carregarClientes() {
         div.className = "item-card";
         div.innerHTML = `
             <div class="item-info">
-                <h3>${cli.nome}</h3>
-                <div class="item-meta">${cli.email} ${cli.telefone ? "• " + cli.telefone : ""}</div>
+                <h3>${escapeHtml(cli.nome)}</h3>
+                <div class="item-meta">${escapeHtml(cli.email)} ${cli.telefone ? "• " + escapeHtml(cli.telefone) : ""}</div>
             </div>
             <div class="item-actions">
                 <button class="btn-edit" onclick="editarCliente(${cli.id_cliente})">Editar</button>
@@ -1000,9 +1030,9 @@ function renderizarLivros(livros) {
         div.className = "item-card";
         div.innerHTML = `
             <div class="item-info">
-                <h3>${liv.titulo}</h3>
-                <div class="item-meta">por <strong>${liv.autor}</strong> (${liv.ano_publicacao}) • <strong>R$ ${Number(liv.preco).toFixed(2)}</strong></div>
-                <span class="tag-categoria">${liv.nome_categoria || "Geral"}</span>
+                <h3>${escapeHtml(liv.titulo)}</h3>
+                <div class="item-meta">por <strong>${escapeHtml(liv.autor)}</strong> (${liv.ano_publicacao}) • <strong>R$ ${Number(liv.preco).toFixed(2)}</strong></div>
+                <span class="tag-categoria">${escapeHtml(liv.nome_categoria || "Geral")}</span>
             </div>
             <div class="item-actions">
                 <button class="btn-edit" onclick="editarLivro(${liv.id_livro})">Editar</button>
@@ -1025,15 +1055,15 @@ async function carregarPedidos() {
 
     cachePedidos.forEach(ped => {
         const resumoItens = ped.itens
-            .map(i => `${i.quantidade}x ${i.titulo_livro} (R$ ${Number(i.preco_unitario).toFixed(2)})`)
+            .map(i => `${i.quantidade}x ${escapeHtml(i.titulo_livro)} (R$ ${Number(i.preco_unitario).toFixed(2)})`)
             .join(" • ");
 
         const div = document.createElement("div");
         div.className = "item-card";
         div.innerHTML = `
             <div class="item-info">
-                <h3>Pedido #${ped.id_pedido} — ${ped.nome_cliente}</h3>
-                <div class="item-meta">Data: ${ped.data_pedido} • Total: <strong>R$ ${Number(ped.valor_total).toFixed(2)}</strong></div>
+                <h3>Pedido #${ped.id_pedido} — ${escapeHtml(ped.nome_cliente)}</h3>
+                <div class="item-meta">Data: ${escapeHtml(ped.data_pedido)} • Total: <strong>R$ ${Number(ped.valor_total).toFixed(2)}</strong></div>
                 <div class="item-meta" style="margin-top: 4px;">${resumoItens}</div>
             </div>
             <div class="item-actions">
@@ -1056,8 +1086,8 @@ document.getElementById("form-livro").addEventListener("submit", async (e) => {
         titulo: document.getElementById("livro-titulo").value.trim(),
         autor: document.getElementById("livro-autor").value.trim(),
         preco: parseFloat(document.getElementById("livro-preco").value),
-        ano_publicacao: parseInt(document.getElementById("livro-ano").value),
-        id_categoria: parseInt(document.getElementById("livro-categoria").value)
+        ano_publicacao: parseInt(document.getElementById("livro-ano").value, 10),
+        id_categoria: parseInt(document.getElementById("livro-categoria").value, 10)
     };
 
     try {
@@ -1246,8 +1276,8 @@ async function excluirCliente(id) {
 }
 
 document.getElementById("btn-add-item").addEventListener("click", () => {
-    const idLivro = parseInt(document.getElementById("pedido-livro-select").value);
-    const qtd = parseInt(document.getElementById("pedido-livro-qtd").value);
+    const idLivro = parseInt(document.getElementById("pedido-livro-select").value, 10);
+    const qtd = parseInt(document.getElementById("pedido-livro-qtd").value, 10);
     const livro = cacheLivros.find(l => l.id_livro === idLivro);
 
     if (!livro || qtd < 1) return;
@@ -1288,7 +1318,7 @@ function renderizarCarrinho() {
         total += subtotal;
         box.innerHTML += `
             <div class="cart-line">
-                <span>${item.quantidade}x <strong>${item.titulo}</strong></span>
+                <span>${item.quantidade}x <strong>${escapeHtml(item.titulo)}</strong></span>
                 <span>R$ ${subtotal.toFixed(2)} <button type="button" class="btn-del" style="padding: 2px 6px; margin-left: 6px;" onclick="removerItemCarrinho(${item.id_livro})">x</button></span>
             </div>
         `;
@@ -1304,7 +1334,7 @@ document.getElementById("form-pedido").addEventListener("submit", async (e) => {
     }
 
     const payload = {
-        id_cliente: parseInt(document.getElementById("pedido-cliente").value),
+        id_cliente: parseInt(document.getElementById("pedido-cliente").value, 10),
         status: document.getElementById("pedido-status").value,
         itens: carrinhoPedido.map(i => ({
             id_livro: i.id_livro,
