@@ -3,7 +3,7 @@ import sqlite3
 from models import Categoria, Cliente, Livro, Pedido, ItemPedido
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_DB_PATH = os.path.join(BASE_DIR, "..", "database", "livraria.db")
+DEFAULT_DB_PATH = os.path.join(BASE_DIR, "..", "..", "database", "livraria.db")
 
 
 class BaseDAO:

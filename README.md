@@ -6,23 +6,24 @@ Sistema web completo de gerenciamento de uma livraria em Greenwich Village, Nova
 
 ```text
 the-greenwich-corner-books/
-├── index.html                          # Página principal autossuficiente (HTML + CSS + JS embutidos para GitHub Pages)
-├── .nojekyll                           # Desativa o processamento Jekyll no GitHub Pages
-├── .gitignore                          # Ignora caches Python e arquivos temporários
-├── README.md                           # Documentação do projeto e guia de execução
-├── css/
-│   └── style.css                       # Folha de estilos temática (New York Bookshop)
-├── js/
-│   └── script.js                       # Lógica CRUD assíncrona (Fetch API + fallback LocalStorage)
+├── templates/
+│   └── index.html                  # Página principal (HTML + CSS + JS embutidos)
+├── static/
+│   ├── css/style.css               # Folha de estilos temática
+│   └── js/script.js                # Lógica CRUD (Fetch API + fallback LocalStorage)
 ├── backend/
-│   ├── app.py                          # Servidor web e API REST em Python (Flask + CORS)
-│   ├── dao.py                          # Camada de persistência DAO (SQLite com chaves estrangeiras)
-│   ├── models.py                       # Classes de domínio POO (Categoria, Cliente, Livro, Pedido, ItemPedido)
-│   └── requirements.txt                # Dependências Python (Flask e flask-cors)
-└── database/
-    ├── banco.sql                       # Script DDL (CREATE TABLE) e DML (INSERT inicial)
-    ├── consultas_integradoras.sql      # Consultas SQL (INNER JOIN, LEFT JOIN, Subqueries, NOT EXISTS, Paginação)
-    └── brmodelo_logico.txt             # Esquema lógico relacional (PKs, FKs e cardinalidades)
+│   ├── app.py                      # Servidor Flask + API REST
+│   ├── requirements.txt            # Dependências (Flask e flask-cors)
+│   ├── models/                     # Classes de domínio POO
+│   └── dao/                        # Camada de persistência (SQLite)
+├── database/
+│   ├── banco.sql                   # DDL e DML inicial
+│   └── consultas_integradoras.sql  # Consultas SQL
+├── arquivos/                       # Pacote .zip do projeto
+├── .github/workflows/static.yml    # Deploy no GitHub Pages
+├── .nojekyll
+├── .gitignore
+└── README.md
 ```
 
 ## Como Publicar no GitHub Pages
