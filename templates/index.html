@@ -19,16 +19,15 @@
     </header>
 
     <nav class="main-nav" aria-label="Navegação do sistema">
-        <button class="nav-tab active" data-tab="tab-livros">Acervo de Livros</button>
-        <button class="nav-tab" data-tab="tab-categorias">Categorias</button>
-        <button class="nav-tab" data-tab="tab-clientes">Leitores & Clientes</button>
-        <button class="nav-tab" data-tab="tab-pedidos">Pedidos & Caixa</button>
+        <a class="nav-tab active" href="index.html">Acervo de Livros</a>
+        <a class="nav-tab" href="categorias.html">Categorias</a>
+        <a class="nav-tab" href="clientes.html">Leitores & Clientes</a>
+        <a class="nav-tab" href="pedidos.html">Pedidos & Caixa</a>
     </nav>
 
     <div id="feedback-banner" class="feedback-banner" role="status" aria-live="polite"></div>
 
     <main class="container">
-        <!-- SEÇÃO 1: LIVROS -->
         <section id="tab-livros" class="tab-panel active">
             <div class="grid-layout">
                 <article class="card form-card">
@@ -75,117 +74,6 @@
                         <input type="search" id="busca-livro" class="search-input" placeholder="Buscar por título ou autor...">
                     </div>
                     <div id="lista-livros" class="items-list"></div>
-                </article>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 2: CATEGORIAS -->
-        <section id="tab-categorias" class="tab-panel">
-            <div class="grid-layout">
-                <article class="card form-card">
-                    <h2 id="titulo-form-categoria">Nova Categoria</h2>
-                    <form id="form-categoria">
-                        <input type="hidden" id="categoria-id">
-                        <div class="field">
-                            <label for="categoria-nome">Nome da Categoria</label>
-                            <input type="text" id="categoria-nome" placeholder="Ex.: Poesia Beat" required minlength="2">
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-primary">Salvar Categoria</button>
-                            <button type="button" id="btn-cancelar-categoria" class="btn-secondary hidden">Cancelar</button>
-                        </div>
-                    </form>
-                </article>
-
-                <article class="card list-card">
-                    <h2>Seções da Livraria</h2>
-                    <div id="lista-categorias" class="items-list"></div>
-                </article>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 3: CLIENTES -->
-        <section id="tab-clientes" class="tab-panel">
-            <div class="grid-layout">
-                <article class="card form-card">
-                    <h2 id="titulo-form-cliente">Cadastrar Leitor</h2>
-                    <form id="form-cliente">
-                        <input type="hidden" id="cliente-id">
-
-                        <div class="field">
-                            <label for="cliente-nome">Nome Completo</label>
-                            <input type="text" id="cliente-nome" placeholder="Ex.: Clara Oswald" required minlength="3">
-                        </div>
-
-                        <div class="field">
-                            <label for="cliente-email">E-mail</label>
-                            <input type="email" id="cliente-email" placeholder="clara@nycmail.com" required>
-                        </div>
-
-                        <div class="field">
-                            <label for="cliente-telefone">Telefone</label>
-                            <input type="tel" id="cliente-telefone" placeholder="(212) 555-0199">
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="submit" class="btn-primary">Salvar Leitor</button>
-                            <button type="button" id="btn-cancelar-cliente" class="btn-secondary hidden">Cancelar</button>
-                        </div>
-                    </form>
-                </article>
-
-                <article class="card list-card">
-                    <h2>Leitores Cadastrados</h2>
-                    <div id="lista-clientes" class="items-list"></div>
-                </article>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 4: PEDIDOS & CARRINHO -->
-        <section id="tab-pedidos" class="tab-panel">
-            <div class="grid-layout">
-                <article class="card form-card">
-                    <h2>Registrar Novo Pedido</h2>
-                    <form id="form-pedido">
-                        <div class="field">
-                            <label for="pedido-cliente">Cliente</label>
-                            <select id="pedido-cliente" required></select>
-                        </div>
-
-                        <div class="field">
-                            <label for="pedido-status">Status Inicial</label>
-                            <select id="pedido-status">
-                                <option value="Pendente">Pendente</option>
-                                <option value="Preparando">Preparando</option>
-                                <option value="Entregue">Entregue</option>
-                            </select>
-                        </div>
-
-                        <div class="cart-builder">
-                            <label>Adicionar Livro ao Pedido</label>
-                            <div class="field-row">
-                                <select id="pedido-livro-select"></select>
-                                <input type="number" id="pedido-livro-qtd" value="1" min="1" max="50" style="max-width: 80px;">
-                                <button type="button" id="btn-add-item" class="btn-accent">+ Item</button>
-                            </div>
-                        </div>
-
-                        <div id="carrinho-itens" class="cart-box">
-                            <p class="empty-hint">Nenhum livro adicionado ao pedido ainda.</p>
-                        </div>
-
-                        <div class="cart-total">
-                            <span>Total do Pedido:</span>
-                            <strong id="pedido-total">R$ 0,00</strong>
-                        </div>
-
-                        <button type="submit" class="btn-primary">Finalizar Pedido</button>
-                    </form>
-                </article>
-
-                <article class="card list-card">
-                    <h2>Histórico de Pedidos</h2>
-                    <div id="lista-pedidos" class="items-list"></div>
                 </article>
             </div>
         </section>

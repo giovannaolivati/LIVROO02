@@ -78,6 +78,12 @@ const SEED_DATA = {
     ]
 };
 
+// Cada página usa só parte dos elementos; el() devolve um elemento solto
+// quando o id não existe na página atual, evitando erros.
+function el(id) {
+    return document.getElementById(id) || document.createElement("div");
+}
+
 function escapeHtml(texto) {
     return String(texto ?? "")
         .replace(/&/g, "&amp;")
@@ -101,7 +107,7 @@ function saveLocalDB(db) {
 }
 
 function mostrarFeedback(mensagem, tipo = "success") {
-    const banner = document.getElementById("feedback-banner");
+    const banner = el("feedback-banner");
     banner.innerHTML = `<div class="feedback-msg ${tipo}">${escapeHtml(mensagem)}</div>`;
     setTimeout(() => {
         banner.innerHTML = "";
@@ -271,7 +277,7 @@ function executarNoLocalStorage(endpoint, options) {
 }
 
 function atualizarBadgeConexao() {
-    const badge = document.getElementById("api-status-badge");
+    const badge = el("api-status-badge");
     if (modoDemoGitHub) {
         badge.textContent = "Modo GitHub Pages (Persistência Local Ativa)";
         badge.className = "status-pill demo";
@@ -291,8 +297,8 @@ async function carregarTudo() {
 
 async function carregarCategorias() {
     cacheCategorias = await apiRequest("/categorias");
-    const lista = document.getElementById("lista-categorias");
-    const selectLivro = document.getElementById("livro-categoria");
+    const lista = el("lista-categorias");
+    const selectLivro = el("livro-categoria");
 
     lista.innerHTML = "";
     selectLivro.innerHTML = "";
@@ -321,8 +327,8 @@ async function carregarCategorias() {
 
 async function carregarClientes() {
     cacheClientes = await apiRequest("/clientes");
-    const lista = document.getElementById("lista-clientes");
-    const selectPedido = document.getElementById("pedido-cliente");
+    const lista = el("lista-clientes");
+    const selectPedido = el("pedido-cliente");
 
     lista.innerHTML = "";
     selectPedido.innerHTML = "";
@@ -353,7 +359,7 @@ async function carregarLivros() {
     cacheLivros = await apiRequest("/livros");
     renderizarLivros(cacheLivros);
 
-    const selectPedidoLivro = document.getElementById("pedido-livro-select");
+    const selectPedidoLivro = el("pedido-livro-select");
     selectPedidoLivro.innerHTML = "";
     cacheLivros.forEach(liv => {
         const opt = document.createElement("option");
@@ -364,7 +370,7 @@ async function carregarLivros() {
 }
 
 function renderizarLivros(livros) {
-    const lista = document.getElementById("lista-livros");
+    const lista = el("lista-livros");
     lista.innerHTML = "";
 
     if (!livros.length) {
@@ -392,7 +398,7 @@ function renderizarLivros(livros) {
 
 async function carregarPedidos() {
     cachePedidos = await apiRequest("/pedidos");
-    const lista = document.getElementById("lista-pedidos");
+    const lista = el("lista-pedidos");
     lista.innerHTML = "";
 
     if (!cachePedidos.length) {
@@ -426,15 +432,15 @@ async function carregarPedidos() {
     });
 }
 
-document.getElementById("form-livro").addEventListener("submit", async (e) => {
+el("form-livro").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const id = document.getElementById("livro-id").value;
+    const id = el("livro-id").value;
     const payload = {
-        titulo: document.getElementById("livro-titulo").value.trim(),
-        autor: document.getElementById("livro-autor").value.trim(),
-        preco: parseFloat(document.getElementById("livro-preco").value),
-        ano_publicacao: parseInt(document.getElementById("livro-ano").value, 10),
-        id_categoria: parseInt(document.getElementById("livro-categoria").value, 10)
+        titulo: el("livro-titulo").value.trim(),
+        autor: el("livro-autor").value.trim(),
+        preco: parseFloat(el("livro-preco").value),
+        ano_publicacao: parseInt(el("livro-ano").value, 10),
+        id_categoria: parseInt(el("livro-categoria").value, 10)
     };
 
     try {
@@ -463,24 +469,24 @@ document.getElementById("form-livro").addEventListener("submit", async (e) => {
 function editarLivro(id) {
     const liv = cacheLivros.find(l => l.id_livro === id);
     if (!liv) return;
-    document.getElementById("livro-id").value = liv.id_livro;
-    document.getElementById("livro-titulo").value = liv.titulo;
-    document.getElementById("livro-autor").value = liv.autor;
-    document.getElementById("livro-preco").value = liv.preco;
-    document.getElementById("livro-ano").value = liv.ano_publicacao;
-    document.getElementById("livro-categoria").value = liv.id_categoria;
-    document.getElementById("titulo-form-livro").textContent = "Editar Livro";
-    document.getElementById("btn-cancelar-livro").classList.remove("hidden");
+    el("livro-id").value = liv.id_livro;
+    el("livro-titulo").value = liv.titulo;
+    el("livro-autor").value = liv.autor;
+    el("livro-preco").value = liv.preco;
+    el("livro-ano").value = liv.ano_publicacao;
+    el("livro-categoria").value = liv.id_categoria;
+    el("titulo-form-livro").textContent = "Editar Livro";
+    el("btn-cancelar-livro").classList.remove("hidden");
 }
 
 function resetFormLivro() {
-    document.getElementById("form-livro").reset();
-    document.getElementById("livro-id").value = "";
-    document.getElementById("titulo-form-livro").textContent = "Cadastrar Livro no Acervo";
-    document.getElementById("btn-cancelar-livro").classList.add("hidden");
+    el("form-livro").reset();
+    el("livro-id").value = "";
+    el("titulo-form-livro").textContent = "Cadastrar Livro no Acervo";
+    el("btn-cancelar-livro").classList.add("hidden");
 }
 
-document.getElementById("btn-cancelar-livro").addEventListener("click", resetFormLivro);
+el("btn-cancelar-livro").addEventListener("click", resetFormLivro);
 
 async function excluirLivro(id) {
     if (!confirm("Remover este livro da estante?")) return;
@@ -493,7 +499,7 @@ async function excluirLivro(id) {
     }
 }
 
-document.getElementById("busca-livro").addEventListener("input", (e) => {
+el("busca-livro").addEventListener("input", (e) => {
     const termo = e.target.value.toLowerCase();
     const filtrados = cacheLivros.filter(
         l => l.titulo.toLowerCase().includes(termo) || l.autor.toLowerCase().includes(termo)
@@ -501,10 +507,10 @@ document.getElementById("busca-livro").addEventListener("input", (e) => {
     renderizarLivros(filtrados);
 });
 
-document.getElementById("form-categoria").addEventListener("submit", async (e) => {
+el("form-categoria").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const id = document.getElementById("categoria-id").value;
-    const payload = { nome: document.getElementById("categoria-nome").value.trim() };
+    const id = el("categoria-id").value;
+    const payload = { nome: el("categoria-nome").value.trim() };
 
     try {
         if (id) {
@@ -533,20 +539,20 @@ document.getElementById("form-categoria").addEventListener("submit", async (e) =
 function editarCategoria(id) {
     const cat = cacheCategorias.find(c => c.id_categoria === id);
     if (!cat) return;
-    document.getElementById("categoria-id").value = cat.id_categoria;
-    document.getElementById("categoria-nome").value = cat.nome;
-    document.getElementById("titulo-form-categoria").textContent = "Editar Categoria";
-    document.getElementById("btn-cancelar-categoria").classList.remove("hidden");
+    el("categoria-id").value = cat.id_categoria;
+    el("categoria-nome").value = cat.nome;
+    el("titulo-form-categoria").textContent = "Editar Categoria";
+    el("btn-cancelar-categoria").classList.remove("hidden");
 }
 
 function resetFormCategoria() {
-    document.getElementById("form-categoria").reset();
-    document.getElementById("categoria-id").value = "";
-    document.getElementById("titulo-form-categoria").textContent = "Nova Categoria";
-    document.getElementById("btn-cancelar-categoria").classList.add("hidden");
+    el("form-categoria").reset();
+    el("categoria-id").value = "";
+    el("titulo-form-categoria").textContent = "Nova Categoria";
+    el("btn-cancelar-categoria").classList.add("hidden");
 }
 
-document.getElementById("btn-cancelar-categoria").addEventListener("click", resetFormCategoria);
+el("btn-cancelar-categoria").addEventListener("click", resetFormCategoria);
 
 async function excluirCategoria(id) {
     if (!confirm("Deseja excluir esta categoria?")) return;
@@ -559,13 +565,13 @@ async function excluirCategoria(id) {
     }
 }
 
-document.getElementById("form-cliente").addEventListener("submit", async (e) => {
+el("form-cliente").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const id = document.getElementById("cliente-id").value;
+    const id = el("cliente-id").value;
     const payload = {
-        nome: document.getElementById("cliente-nome").value.trim(),
-        email: document.getElementById("cliente-email").value.trim(),
-        telefone: document.getElementById("cliente-telefone").value.trim()
+        nome: el("cliente-nome").value.trim(),
+        email: el("cliente-email").value.trim(),
+        telefone: el("cliente-telefone").value.trim()
     };
 
     try {
@@ -594,22 +600,22 @@ document.getElementById("form-cliente").addEventListener("submit", async (e) => 
 function editarCliente(id) {
     const cli = cacheClientes.find(c => c.id_cliente === id);
     if (!cli) return;
-    document.getElementById("cliente-id").value = cli.id_cliente;
-    document.getElementById("cliente-nome").value = cli.nome;
-    document.getElementById("cliente-email").value = cli.email;
-    document.getElementById("cliente-telefone").value = cli.telefone || "";
-    document.getElementById("titulo-form-cliente").textContent = "Editar Leitor";
-    document.getElementById("btn-cancelar-cliente").classList.remove("hidden");
+    el("cliente-id").value = cli.id_cliente;
+    el("cliente-nome").value = cli.nome;
+    el("cliente-email").value = cli.email;
+    el("cliente-telefone").value = cli.telefone || "";
+    el("titulo-form-cliente").textContent = "Editar Leitor";
+    el("btn-cancelar-cliente").classList.remove("hidden");
 }
 
 function resetFormCliente() {
-    document.getElementById("form-cliente").reset();
-    document.getElementById("cliente-id").value = "";
-    document.getElementById("titulo-form-cliente").textContent = "Cadastrar Leitor";
-    document.getElementById("btn-cancelar-cliente").classList.add("hidden");
+    el("form-cliente").reset();
+    el("cliente-id").value = "";
+    el("titulo-form-cliente").textContent = "Cadastrar Leitor";
+    el("btn-cancelar-cliente").classList.add("hidden");
 }
 
-document.getElementById("btn-cancelar-cliente").addEventListener("click", resetFormCliente);
+el("btn-cancelar-cliente").addEventListener("click", resetFormCliente);
 
 async function excluirCliente(id) {
     if (!confirm("Remover este cliente?")) return;
@@ -622,9 +628,9 @@ async function excluirCliente(id) {
     }
 }
 
-document.getElementById("btn-add-item").addEventListener("click", () => {
-    const idLivro = parseInt(document.getElementById("pedido-livro-select").value, 10);
-    const qtd = parseInt(document.getElementById("pedido-livro-qtd").value, 10);
+el("btn-add-item").addEventListener("click", () => {
+    const idLivro = parseInt(el("pedido-livro-select").value, 10);
+    const qtd = parseInt(el("pedido-livro-qtd").value, 10);
     const livro = cacheLivros.find(l => l.id_livro === idLivro);
 
     if (!livro || qtd < 1) return;
@@ -649,8 +655,8 @@ function removerItemCarrinho(idLivro) {
 }
 
 function renderizarCarrinho() {
-    const box = document.getElementById("carrinho-itens");
-    const totalEl = document.getElementById("pedido-total");
+    const box = el("carrinho-itens");
+    const totalEl = el("pedido-total");
 
     if (!carrinhoPedido.length) {
         box.innerHTML = `<p class="empty-hint">Nenhum livro adicionado ao pedido ainda.</p>`;
@@ -673,7 +679,7 @@ function renderizarCarrinho() {
     totalEl.textContent = `R$ ${total.toFixed(2)}`;
 }
 
-document.getElementById("form-pedido").addEventListener("submit", async (e) => {
+el("form-pedido").addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!carrinhoPedido.length) {
         mostrarFeedback("Adicione pelo menos um livro ao carrinho antes de finalizar.", "error");
@@ -681,8 +687,8 @@ document.getElementById("form-pedido").addEventListener("submit", async (e) => {
     }
 
     const payload = {
-        id_cliente: parseInt(document.getElementById("pedido-cliente").value, 10),
-        status: document.getElementById("pedido-status").value,
+        id_cliente: parseInt(el("pedido-cliente").value, 10),
+        status: el("pedido-status").value,
         itens: carrinhoPedido.map(i => ({
             id_livro: i.id_livro,
             quantidade: i.quantidade,
@@ -729,14 +735,5 @@ async function excluirPedido(idPedido) {
         mostrarFeedback(erro.message, "error");
     }
 }
-
-document.querySelectorAll(".nav-tab").forEach(btn => {
-    btn.addEventListener("click", () => {
-        document.querySelectorAll(".nav-tab").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById(btn.dataset.tab).classList.add("active");
-    });
-});
 
 document.addEventListener("DOMContentLoaded", carregarTudo);

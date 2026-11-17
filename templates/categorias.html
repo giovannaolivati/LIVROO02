@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorias • The Greenwich Corner Books</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <header class="storefront-header">
+        <div class="header-inner">
+            <span class="badge-location">Greenwich Village • Est. 1974 • New York City</span>
+            <h1>The Greenwich Corner Books</h1>
+            <p class="subtitle">Estantes de madeira, luz quente e histórias para dias de outono em Manhattan</p>
+            <div class="status-bar">
+                <span id="api-status-badge" class="status-pill">Conectando ao sistema...</span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav" aria-label="Navegação do sistema">
+        <a class="nav-tab" href="index.html">Acervo de Livros</a>
+        <a class="nav-tab active" href="categorias.html">Categorias</a>
+        <a class="nav-tab" href="clientes.html">Leitores & Clientes</a>
+        <a class="nav-tab" href="pedidos.html">Pedidos & Caixa</a>
+    </nav>
+
+    <div id="feedback-banner" class="feedback-banner" role="status" aria-live="polite"></div>
+
+    <main class="container">
+        <section id="tab-categorias" class="tab-panel active">
+            <div class="grid-layout">
+                <article class="card form-card">
+                    <h2 id="titulo-form-categoria">Nova Categoria</h2>
+                    <form id="form-categoria">
+                        <input type="hidden" id="categoria-id">
+                        <div class="field">
+                            <label for="categoria-nome">Nome da Categoria</label>
+                            <input type="text" id="categoria-nome" placeholder="Ex.: Poesia Beat" required minlength="2">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">Salvar Categoria</button>
+                            <button type="button" id="btn-cancelar-categoria" class="btn-secondary hidden">Cancelar</button>
+                        </div>
+                    </form>
+                </article>
+
+                <article class="card list-card">
+                    <h2>Seções da Livraria</h2>
+                    <div id="lista-categorias" class="items-list"></div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="storefront-footer">
+        <p>The Greenwich Corner Books • Bleecker St, Greenwich Village, NY</p>
+        <small>Projeto Integrador UNASP-HT (DWS • POO • Banco de Dados)</small>
+    </footer>
+
+    <script src="../static/js/script.js"></script>
+</body>
+</html>

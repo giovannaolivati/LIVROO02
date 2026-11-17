@@ -1,7 +1,7 @@
 import os
 import sqlite3
 from datetime import date
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, abort
 from flask_cors import CORS
 from models import Categoria, Cliente, Livro, Pedido, ItemPedido
 from dao import inicializar_banco, CategoriaDAO, ClienteDAO, LivroDAO, PedidoDAO
@@ -26,6 +26,13 @@ pedido_dao = PedidoDAO()
 @app.route("/", methods=["GET"])
 def servir_index():
     return render_template("index.html")
+
+
+@app.route("/<pagina>.html", methods=["GET"])
+def servir_pagina(pagina):
+    if pagina not in ("index", "categorias", "clientes", "pedidos"):
+        abort(404)
+    return render_template(f"{pagina}.html")
 
 
 # --- API REST: CATEGORIAS ---

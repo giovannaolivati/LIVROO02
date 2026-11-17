@@ -115,6 +115,11 @@ body {
     transition: all 0.25s ease;
 }
 
+a.nav-tab {
+    text-decoration: none;
+    display: inline-block;
+}
+
 .nav-tab:hover {
     background-color: rgba(140, 56, 41, 0.1);
     color: var(--tijolo-ny);
