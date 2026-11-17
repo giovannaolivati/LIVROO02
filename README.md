@@ -5,17 +5,18 @@ Sistema web completo de gerenciamento de uma livraria em Greenwich Village, Nova
 ## Estrutura de Pastas do Projeto
 
 ```text
-the-greenwich-corner-books/
-├── templates/
-│   └── index.html                  # Página principal (HTML + CSS + JS embutidos)
-├── static/
-│   ├── css/style.css               # Folha de estilos temática
-│   └── js/script.js                # Lógica CRUD (Fetch API + fallback LocalStorage)
-├── backend/
-│   ├── app.py                      # Servidor Flask + API REST
-│   ├── requirements.txt            # Dependências (Flask e flask-cors)
-│   ├── models/                     # Classes de domínio POO
-│   └── dao/                        # Camada de persistência (SQLite)
+.
+├── run.py                          # Ponto de entrada (python run.py)
+├── requirements.txt                # Dependências (Flask e flask-cors)
+├── app/                            # Aplicação Flask
+│   ├── __init__.py                 # create_app() e configuração
+│   ├── routes.py                   # Rotas e API REST
+│   ├── models.py                   # Classes de domínio (POO)
+│   ├── dao.py                      # Persistência (SQLite)
+│   ├── templates/index.html        # Página principal
+│   └── static/
+│       ├── css/style.css
+│       └── js/script.js
 ├── database/
 │   ├── banco.sql                   # DDL e DML inicial
 │   └── consultas_integradoras.sql  # Consultas SQL
@@ -38,11 +39,10 @@ the-greenwich-corner-books/
 
 1. Instale as dependências:
    ```bash
-   cd backend
    pip install -r requirements.txt
    ```
 2. Inicie o servidor Flask (cria e popula `database/livraria.db` automaticamente):
    ```bash
-   python app.py
+   python run.py
    ```
-3. Acesse `http://127.0.0.1:5000` no navegador (ou abra `index.html`). O badge superior indicará **API REST Flask + SQLite Conectada**.
+3. Acesse `http://127.0.0.1:5000` no navegador . O badge superior indicará **API REST Flask + SQLite Conectada**.
