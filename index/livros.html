@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Greenwich Corner Books • New York</title>
+    <link rel="stylesheet" href="../style/style.css">
+</head>
+<body>
+    <header class="storefront-header">
+        <div class="header-inner">
+            <span class="badge-location">Greenwich Village • Est. 1974 • New York City</span>
+            <h1>The Greenwich Corner Books</h1>
+            <p class="subtitle">Estantes de madeira, luz quente e histórias para dias de outono em Manhattan</p>
+            <div class="status-bar">
+                <span id="api-status-badge" class="status-pill">Conectando ao sistema...</span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav" aria-label="Navegação do sistema">
+        <a class="nav-tab active" href="livros.html" aria-current="page">Acervo de Livros</a>
+        <a class="nav-tab" href="categorias.html">Categorias</a>
+        <a class="nav-tab" href="clientes.html">Leitores & Clientes</a>
+        <a class="nav-tab" href="pedidos.html">Pedidos & Caixa</a>
+    </nav>
+
+    <div id="feedback-banner" class="feedback-banner" role="status" aria-live="polite"></div>
+
+    <main class="container">
+        <section class="grid-layout">
+            <article class="card form-card">
+                <h2 id="titulo-form-livro">Cadastrar Livro no Acervo</h2>
+                <form id="form-livro">
+                    <input type="hidden" id="livro-id">
+
+                    <div class="field">
+                        <label for="livro-titulo">Título da Obra</label>
+                        <input type="text" id="livro-titulo" placeholder="Ex.: Trilogia de Nova York" required minlength="2">
+                    </div>
+
+                    <div class="field">
+                        <label for="livro-autor">Autor(a)</label>
+                        <input type="text" id="livro-autor" placeholder="Ex.: Paul Auster" required minlength="2">
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="livro-preco">Preço (R$)</label>
+                            <input type="number" id="livro-preco" step="0.01" min="0.01" placeholder="49.90" required>
+                        </div>
+                        <div class="field">
+                            <label for="livro-ano">Ano</label>
+                            <input type="number" id="livro-ano" min="1450" max="2026" placeholder="1987" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="livro-categoria">Categoria Literária</label>
+                        <select id="livro-categoria" required></select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Salvar na Prateleira</button>
+                        <button type="button" id="btn-cancelar-livro" class="btn-secondary hidden">Cancelar Edição</button>
+                    </div>
+                </form>
+            </article>
+
+            <article class="card list-card">
+                <div class="list-header">
+                    <h2>Estante Principal</h2>
+                    <input type="search" id="busca-livro" class="search-input" placeholder="Buscar por título ou autor...">
+                </div>
+                <div id="lista-livros" class="items-list"></div>
+            </article>
+        </section>
+    </main>
+
+    <footer class="storefront-footer">
+        <p>The Greenwich Corner Books • Bleecker St, Greenwich Village, NY</p>
+        <small>Projeto Integrador UNASP-HT (DWS • POO • Banco de Dados)</small>
+    </footer>
+
+    <script src="../script/dados-iniciais.js"></script>
+    <script src="../script/utilidades.js"></script>
+    <script src="../script/api.js"></script>
+    <script src="../script/livros.js"></script>
+</body>
+</html>

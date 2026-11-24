@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
 
+/* ===== Cores e variáveis ===== */
 :root {
     --verde-fachada: #1b3022;
     --verde-musgo: #2d4736;
@@ -15,6 +16,7 @@
     --sombra-quente: 0 8px 24px rgba(38, 25, 17, 0.08);
 }
 
+/* ===== Base ===== */
 * {
     box-sizing: border-box;
 }
@@ -30,6 +32,11 @@ body {
     line-height: 1.6;
 }
 
+.hidden {
+    display: none !important;
+}
+
+/* ===== Cabeçalho ===== */
 .storefront-header {
     background: linear-gradient(180deg, #142419 0%, var(--verde-fachada) 100%);
     color: var(--papel-creme);
@@ -92,6 +99,7 @@ body {
     color: #fff3e0;
 }
 
+/* ===== Menu de navegação ===== */
 .main-nav {
     display: flex;
     justify-content: center;
@@ -103,6 +111,8 @@ body {
 }
 
 .nav-tab {
+    display: inline-block;
+    text-decoration: none;
     background: transparent;
     border: 1px solid transparent;
     color: var(--madeira-escura);
@@ -113,11 +123,6 @@ body {
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.25s ease;
-}
-
-a.nav-tab {
-    text-decoration: none;
-    display: inline-block;
 }
 
 .nav-tab:hover {
@@ -131,6 +136,7 @@ a.nav-tab {
     box-shadow: 0 2px 8px rgba(140, 56, 41, 0.3);
 }
 
+/* ===== Mensagens de retorno ===== */
 .feedback-banner {
     max-width: 1120px;
     margin: 1rem auto 0;
@@ -156,18 +162,11 @@ a.nav-tab {
     border-left: 5px solid #c62828;
 }
 
+/* ===== Conteúdo: formulário à esquerda, lista à direita ===== */
 .container {
     max-width: 1120px;
     margin: 1.8rem auto 3rem;
     padding: 0 1.5rem;
-}
-
-.tab-panel {
-    display: none;
-}
-
-.tab-panel.active {
-    display: block;
 }
 
 .grid-layout {
@@ -195,6 +194,7 @@ a.nav-tab {
     font-size: 1.45rem;
 }
 
+/* ===== Formulários ===== */
 form {
     display: flex;
     flex-direction: column;
@@ -239,12 +239,17 @@ input:focus, select:focus {
     box-shadow: 0 0 0 3px rgba(201, 150, 59, 0.2);
 }
 
+.input-qtd {
+    max-width: 80px;
+}
+
 .form-actions {
     display: flex;
     gap: 0.6rem;
     margin-top: 0.4rem;
 }
 
+/* ===== Botões ===== */
 button {
     font-family: inherit;
     font-weight: 600;
@@ -290,10 +295,34 @@ button:active {
     background-color: var(--verde-musgo);
 }
 
-.hidden {
-    display: none !important;
+.btn-edit {
+    background-color: var(--dourado-luz);
+    color: var(--madeira-escura);
+    padding: 0.45rem 0.85rem;
+    font-size: 0.85rem;
 }
 
+.btn-edit:hover {
+    background-color: #b88428;
+}
+
+.btn-del {
+    background-color: #a93226;
+    color: #fff;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.85rem;
+}
+
+.btn-del:hover {
+    background-color: #87241a;
+}
+
+.btn-remover-item {
+    padding: 2px 6px;
+    margin-left: 6px;
+}
+
+/* ===== Listas ===== */
 .list-header {
     display: flex;
     justify-content: space-between;
@@ -350,6 +379,10 @@ button:active {
     color: var(--texto-suave);
 }
 
+.item-meta-itens {
+    margin-top: 4px;
+}
+
 .tag-categoria {
     display: inline-block;
     background-color: rgba(27, 48, 34, 0.1);
@@ -367,28 +400,20 @@ button:active {
     flex-shrink: 0;
 }
 
-.btn-edit {
-    background-color: var(--dourado-luz);
-    color: var(--madeira-escura);
-    padding: 0.45rem 0.85rem;
+.status-select-inline {
+    padding: 0.35rem 0.6rem;
     font-size: 0.85rem;
 }
 
-.btn-edit:hover {
-    background-color: #b88428;
+.empty-hint {
+    margin: 0;
+    color: var(--texto-suave);
+    font-style: italic;
+    font-size: 0.9rem;
+    text-align: center;
 }
 
-.btn-del {
-    background-color: #a93226;
-    color: #fff;
-    padding: 0.45rem 0.85rem;
-    font-size: 0.85rem;
-}
-
-.btn-del:hover {
-    background-color: #87241a;
-}
-
+/* ===== Carrinho do pedido ===== */
 .cart-box {
     background-color: #f9f4ea;
     border: 1px dashed #c8b8a2;
@@ -421,19 +446,7 @@ button:active {
     font-size: 1.05rem;
 }
 
-.empty-hint {
-    margin: 0;
-    color: var(--texto-suave);
-    font-style: italic;
-    font-size: 0.9rem;
-    text-align: center;
-}
-
-.status-select-inline {
-    padding: 0.35rem 0.6rem;
-    font-size: 0.85rem;
-}
-
+/* ===== Rodapé ===== */
 .storefront-footer {
     text-align: center;
     padding: 2rem 1rem;
@@ -447,6 +460,7 @@ button:active {
     font-family: 'Playfair Display', Georgia, serif;
 }
 
+/* ===== Telas pequenas ===== */
 @media (max-width: 860px) {
     .grid-layout {
         grid-template-columns: 1fr;

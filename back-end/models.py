@@ -6,10 +6,6 @@ class Categoria:
     def to_dict(self):
         return {"id_categoria": self.id_categoria, "nome": self.nome}
 
-    @classmethod
-    def from_dict(cls, dados):
-        return cls(dados.get("id_categoria"), dados["nome"])
-
 
 class Cliente:
     def __init__(self, id_cliente, nome, email, telefone=""):
@@ -20,10 +16,6 @@ class Cliente:
 
     def to_dict(self):
         return {"id_cliente": self.id_cliente, "nome": self.nome, "email": self.email, "telefone": self.telefone}
-
-    @classmethod
-    def from_dict(cls, dados):
-        return cls(dados.get("id_cliente"), dados["nome"], dados["email"], dados.get("telefone", ""))
 
 
 class Livro:
@@ -84,5 +76,5 @@ class Pedido:
             "valor_total": self.valor_total,
             "id_cliente": self.id_cliente,
             "nome_cliente": self.nome_cliente,
-            "itens": [item.to_dict() if hasattr(item, "to_dict") else item for item in self.itens]
+            "itens": [item.to_dict() for item in self.itens]
         }
